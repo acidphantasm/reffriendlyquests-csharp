@@ -25,7 +25,7 @@ public record ModMetadata : AbstractModMetadata
     public override string Name { get; init; } = "Ref Friendly Quests";
     public override string Author { get; init; } = "acidphantasm";
     public override List<string>? Contributors { get; init; }
-    public override SemanticVersioning.Version Version { get; init; } = new("2.0.0");
+    public override SemanticVersioning.Version Version { get; init; } = new("2.0.1");
     public override SemanticVersioning.Range SptVersion { get; init; } = new("~4.0.0");
     public override List<string>? Incompatibilities { get; init; }
     public override Dictionary<string, SemanticVersioning.Range>? ModDependencies { get; init; }
@@ -60,7 +60,7 @@ public class RefFriendlyQuests(
         "683421515619c8e2a9031511", // to great heights p4 - arena -> 50 pmc
         "68342265a8d674b5740b31f0", // to great heights p5 - arena -> 75 pmc
         "6834233fecd5cf3a440d855b", // against the conscience p1
-        "68342446a8d674b5740b31fc", // against the conscience p2 - arena -> 50 pmc with each weapon type
+        "68342446a8d674b5740b31fc", // against the conscience p2 - arena -> 50 any with each weapon type
         "6834254f2f0e2a7eb90b62ef"  // decisions
     ];
 
@@ -71,7 +71,7 @@ public class RefFriendlyQuests(
         "6834202a186efa3c5b07f9a2", // to great heights p3 - arena -> 25 pmc
         "683421515619c8e2a9031511", // to great heights p4 - arena -> 50 pmc
         "68342265a8d674b5740b31f0", // to great heights p5 - arena -> 75 pmc
-        "68342446a8d674b5740b31fc", // against the conscience p2 - arena -> 50 pmc with each weapon type
+        "68342446a8d674b5740b31fc", // against the conscience p2 - arena -> 50 any with each weapon type
     ];
     public Task OnLoad()
     {
@@ -112,12 +112,12 @@ public class RefFriendlyQuests(
                     localeData[_fixedQuestData["6834202a186efa3c5b07f9a2"].AvailableForFinish[0].Id] = "Eliminate 25 PMCs";
                     localeData[_fixedQuestData["683421515619c8e2a9031511"].AvailableForFinish[0].Id] = "Eliminate 50 PMCs";
                     localeData[_fixedQuestData["68342265a8d674b5740b31f0"].AvailableForFinish[0].Id] = "Eliminate 75 PMCs";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[0].Id] = "Eliminate 50 PMCs with Assault Carbines";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[1].Id] = "Eliminate 50 PMCs with Assault Rifles";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[2].Id] = "Eliminate 50 PMCs with LMGs";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[3].Id] = "Eliminate 50 PMCs with Marksman Rifles";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[4].Id] = "Eliminate 50 PMCs with Shotguns";
-                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[5].Id] = "Eliminate 50 PMCs with SMGs";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[0].Id] = "Eliminate any 50 targets with Assault Carbines";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[1].Id] = "Eliminate any 50 targets with Assault Rifles";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[2].Id] = "Eliminate any 50 targets with LMGs";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[3].Id] = "Eliminate any 50 targets with Marksman Rifles";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[4].Id] = "Eliminate any 50 targets with Shotguns";
+                    localeData[_fixedQuestData["68342446a8d674b5740b31fc"].AvailableForFinish[5].Id] = "Eliminate any 50 targets with SMGs";
                 }
                 return localeData;
             });
