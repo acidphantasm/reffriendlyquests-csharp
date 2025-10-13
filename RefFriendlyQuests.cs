@@ -35,7 +35,7 @@ public record ModMetadata : AbstractModMetadata
 }
 
 // We want to load after PostDBModLoader is complete, so we set our type priority to that, plus 1.
-[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 1)]
+[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 69420)]
 public class RefFriendlyQuests(
     ISptLogger<RefFriendlyQuests> logger,
     DatabaseService databaseService,
