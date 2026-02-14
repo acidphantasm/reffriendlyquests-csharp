@@ -42,14 +42,17 @@
 
         <ItemGroup>
             <ServerComponents Include="$(ProjectDir)bin\Release\$(ProjectName)\*.*" />
+            <Data Include="$(ProjectDir)db\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(ServerComponents)" DestinationFolder="$(ModOutputDir)%(RecursiveDir)" />
+        <Copy SourceFiles="@(Data)" DestinationFolder="$(ModOutputDir)db\%(RecursiveDir)" />
 
         <MakeDir Directories="$(ProjectDir)release" Condition="!Exists('$(ProjectDir)release')" />
         <MakeDir Directories="$(ReleaseOutputDir)" Condition="!Exists('$(ReleaseOutputDir)')" />
 
         <Copy SourceFiles="@(ServerComponents)" DestinationFolder="$(ReleaseOutputDir)%(RecursiveDir)" />
+        <Copy SourceFiles="@(Data)" DestinationFolder="$(ReleaseOutputDir)db\%(RecursiveDir)" />
 
         <Delete Files="$(ZipFile)" Condition="Exists('$(ZipFile)')" />
 
