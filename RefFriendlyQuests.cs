@@ -1,19 +1,20 @@
 using System.Reflection;
-using System.Runtime.InteropServices.JavaScript;
+using SPTarkov.Common.Models.Logging;
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
-using SPTarkov.Server.Core.Helpers;
+using SPTarkov.Server.Core.Helpers.Items;
+using SPTarkov.Server.Core.Helpers.Server;
 using SPTarkov.Server.Core.Models.Common;
 using SPTarkov.Server.Core.Models.Eft.Common.Tables;
 using SPTarkov.Server.Core.Models.Enums;
-using SPTarkov.Server.Core.Models.Enums.Hideout;
 using SPTarkov.Server.Core.Models.Spt.Mod;
-using SPTarkov.Server.Core.Models.Utils;
-using SPTarkov.Server.Core.Services;
+using SPTarkov.Server.Core.Models.Spt.Tables;
+using Range = SemanticVersioning.Range;
+using Version = SemanticVersioning.Version;
 
 namespace _refFriendlyQuests;
 
-public record ModMetadata : AbstractModMetadata
+public sealed class ModMetadata : IModMetadata
 {
     /// <summary>
     /// Any string can be used for a modId, but it should ideally be unique and not easily duplicated
@@ -21,24 +22,26 @@ public record ModMetadata : AbstractModMetadata
     /// It is recommended (but not mandatory) to use the reverse domain name notation,
     /// see: https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html
     /// </summary>
-    public override string ModGuid { get; init; } = "com.acidphantasm.reffriendlyquests";
-    public override string Name { get; init; } = "Ref Friendly Quests";
-    public override string Author { get; init; } = "acidphantasm";
-    public override List<string>? Contributors { get; init; }
-    public override SemanticVersioning.Version Version { get; init; } = new("2.0.3");
-    public override SemanticVersioning.Range SptVersion { get; init; } = new("~4.0.10");
-    public override List<string>? Incompatibilities { get; init; }
-    public override Dictionary<string, SemanticVersioning.Range>? ModDependencies { get; init; }
-    public override string? Url { get; init; }
-    public override bool? IsBundleMod { get; init; }
-    public override string? License { get; init; } = "MIT";
+    public string ModGuid { get; init; } = "com.acidphantasm.reffriendlyquests";
+    public string Name { get; init; } = "Ref Friendly Quests";
+    public string Author { get; init; } = "acidphantasm";
+    public List<string>? Contributors { get; init; }
+    public Version Version { get; init; } = new("2.1.0");
+    public Range SptVersion { get; init; } = new("~4.1.0");
+    public bool HasPrepatcher { get; init; } = false;
+    public List<string>? Incompatibilities { get; init; }
+    public Dictionary<string, Range>? ModDependencies { get; init; }
+    public string? Url { get; init; }
+    public string License { get; init; } = "MIT";
 }
 
-// We want to load after PostDBModLoader is complete, so we set our type priority to that, plus 1.
-[Injectable(TypePriority = OnLoadOrder.PostDBModLoader + 69420)]
+// Load after PostLoad so quest/item tables are ready.
+[Injectable(TypePriority = OnLoadOrder.PostLoad + 1)]
 public class RefFriendlyQuests(
     ISptLogger<RefFriendlyQuests> logger,
-    DatabaseService databaseService,
+    TemplateTable templateTable,
+    LocaleTable localeTable,
+    TradersTable tradersTable,
     ModHelper modHelper,
     ItemHelper itemHelper)
     : IOnLoad
@@ -74,7 +77,8 @@ public class RefFriendlyQuests(
         "68342265a8d674b5740b31f0", // to great heights p5 - arena -> 75 pmc
         "68342446a8d674b5740b31fc", // against the conscience p2 - arena -> 50 any with each weapon type
     ];
-    public Task OnLoad()
+
+    public Task OnLoadAsync(CancellationToken cancellationToken)
     {
         var pathToMod = modHelper.GetAbsolutePathToModFolder(Assembly.GetExecutingAssembly());
         _modConfig = modHelper.GetJsonDataFromFile<ModConfig>(pathToMod, "config.json");
@@ -92,7 +96,7 @@ public class RefFriendlyQuests(
 
     private void AddWeaponsToQuestsIfMissing()
     {
-        var items = databaseService.GetItems();
+        var items = templateTable.Items;
         foreach (var item in items)
         {
             if (itemHelper.IsOfBaseclass(item.Key, BaseClasses.ASSAULT_CARBINE))
@@ -129,7 +133,7 @@ public class RefFriendlyQuests(
     
     private void EditQuests()
     {
-        var quests = databaseService.GetQuests();
+        var quests = templateTable.Quests;
         
         foreach (var quest in _refQuestsToEdit)
         {
@@ -139,7 +143,7 @@ public class RefFriendlyQuests(
 
     private void FixLocales()
     {
-        var globalLocale = databaseService.GetLocales().Global;
+        var globalLocale = localeTable.Global;
         foreach ((string locale, var lazyLoadedLocales) in globalLocale)
         {
             lazyLoadedLocales.AddTransformer(localeData =>
@@ -165,13 +169,18 @@ public class RefFriendlyQuests(
     
     private void ChangeLoyalty()
     {
-        var refBase = databaseService.GetTrader(Traders.REF).Base;
-        refBase.LoyaltyLevels[3].MinStanding = 1.0;
+        var refTrader = tradersTable.GetTrader(Traders.REF);
+        if (refTrader?.Base?.LoyaltyLevels is null)
+        {
+            return;
+        }
+
+        refTrader.Base.LoyaltyLevels[3].MinStanding = 1.0;
     }
     
     private void AddLegaMedalRewards()
     {
-        var quests = databaseService.GetQuests();
+        var quests = templateTable.Quests;
         
         foreach (var quest in _refQuests)
         {
@@ -222,7 +231,7 @@ public class RefFriendlyQuests(
     
     private void MultiplyGpCoin()
     {
-        var quests = databaseService.GetQuests();
+        var quests = templateTable.Quests;
 
         foreach (var quest in _refQuests)
         {
