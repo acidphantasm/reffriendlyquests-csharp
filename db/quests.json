@@ -141,7 +141,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 25,
+        "value": 20,
         "visibilityConditions": []
       }
     ]
@@ -190,7 +190,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 25,
         "visibilityConditions": []
       }
     ]
@@ -239,7 +239,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 75,
+        "value": 50,
         "visibilityConditions": []
       }
     ]
@@ -304,7 +304,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       },
       {
@@ -389,7 +389,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       },
       {
@@ -443,7 +443,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       },
       {
@@ -497,7 +497,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       },
       {
@@ -559,7 +559,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       },
       {
@@ -626,7 +626,7 @@
         "oneSessionOnly": false,
         "parentId": "",
         "type": "Elimination",
-        "value": 50,
+        "value": 10,
         "visibilityConditions": []
       }
     ]
